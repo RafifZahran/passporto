@@ -1,0 +1,70 @@
+PASSPORTO BACKEND - API REFERENCE
+===================================
+
+Base URL: http://localhost:8080/api/v1
+
+---
+
+HEALTH CHECK
+  GET /health
+  Response: {"status":"ok","service":"passporto-api"}
+
+---
+
+AUTH ENDPOINTS (Public - No token required)
+
+POST /api/v1/auth/register
+  Body: { "email": "user@example.com", "password": "yourpassword" }
+  Response 201: { "token": "<JWT>", "user": { ... } }
+  Response 409: { "error": "an account with this email already exists" }
+
+POST /api/v1/auth/login
+  Body: { "email": "user@example.com", "password": "yourpassword" }
+  Response 200: { "token": "<JWT>", "user": { ... } }
+  Response 401: { "error": "invalid email or password" }
+
+---
+
+AUTH ENDPOINTS (Protected - Bearer JWT required)
+
+GET /api/v1/auth/me
+  Headers: Authorization: Bearer <token>
+  Response 200: { "id": "...", "email": "...", "role": "citizen", ... }
+
+POST /api/v1/auth/validate-nik
+  Headers: Authorization: Bearer <token>
+  Body: { "nik": "3201010101010001" }
+  Response 200: { "is_valid": true, "full_name": "Budi Santoso", "nik": "...", "message": "..." }
+  Response 422: { "is_valid": false, "message": "NIK must be exactly 16 digits" }
+
+---
+
+MOCK NIK REGISTRY (For Testing)
+  Valid NIKs pre-loaded:
+    3201010101010001 -> "Budi Santoso"
+    3271010203040002 -> "Siti Rahayu"
+    3175052504900003 -> "Ahmad Fauzi"
+    3578091205850004 -> "Dewi Lestari"
+    3173040807950005 -> "Rizky Pratama"
+  
+  Any other valid 16-digit NIK -> auto-generates "Citizen NIK-<last4>"
+
+---
+
+QUICK TEST WITH CURL:
+
+  # Register
+  curl -X POST http://localhost:8080/api/v1/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"email":"budi@passporto.id","password":"secure1234"}'
+
+  # Login
+  curl -X POST http://localhost:8080/api/v1/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"budi@passporto.id","password":"secure1234"}'
+
+  # Validate NIK (replace TOKEN with actual JWT)
+  curl -X POST http://localhost:8080/api/v1/auth/validate-nik \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer TOKEN" \
+    -d '{"nik":"3201010101010001"}'
