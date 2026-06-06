@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Globe, LayoutDashboard, FileText, CreditCard,
+  LayoutDashboard, FileText, CreditCard,
   MapPin, Bell, LogOut, ChevronRight, Shield, User as UserIcon, RefreshCw,
   Users, Sparkles
 } from 'lucide-react';
@@ -12,18 +12,18 @@ import { useAuth } from '@/lib/auth-context';
 import { ToastContainer, useToast } from '@/components/ToastNotification';
 
 const citizenNavItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard',      color: '#3b82f6' },
-  { href: '/apply',     icon: FileText,        label: 'Ajukan Paspor',  color: '#8b5cf6' },
-  { href: '/tracker',   icon: Bell,            label: 'Lacak Status',   color: '#f59e0b' },
-  { href: '/checkin',   icon: MapPin,          label: 'Check-in GPS',   color: '#10b981' },
-  { href: '/payments',  icon: CreditCard,      label: 'Pembayaran',     color: '#f43f5e' },
-  { href: '/profile',   icon: UserIcon,        label: 'Profil & NIK',   color: '#64748b' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard',      color: '#6D8196' },
+  { href: '/apply',     icon: FileText,        label: 'Ajukan Paspor',  color: '#6D8196' },
+  { href: '/tracker',   icon: Bell,            label: 'Lacak Status',   color: '#6D8196' },
+  { href: '/checkin',   icon: MapPin,          label: 'Check-in GPS',   color: '#6D8196' },
+  { href: '/payments',  icon: CreditCard,      label: 'Pembayaran',     color: '#6D8196' },
+  { href: '/profile',   icon: UserIcon,        label: 'Profil & NIK',   color: '#6D8196' },
 ];
 
 const adminNavItems = [
-  { href: '/admin?tab=applications', icon: FileText,   label: 'Kelola Permohonan', color: '#3b82f6' },
-  { href: '/admin?tab=users',        icon: Users,      label: 'Kelola Pengguna',   color: '#8b5cf6' },
-  { href: '/profile',                icon: UserIcon,   label: 'Profil Admin',      color: '#64748b' },
+  { href: '/admin?tab=applications', icon: FileText, label: 'Kelola Permohonan', color: '#6D8196' },
+  { href: '/admin?tab=users',        icon: Users,    label: 'Kelola Pengguna',   color: '#6D8196' },
+  { href: '/profile',                icon: UserIcon, label: 'Profil Admin',      color: '#6D8196' },
 ];
 
 function SidebarNav({ visibleNavItems, pathname, setSidebarOpen }: {
@@ -32,7 +32,7 @@ function SidebarNav({ visibleNavItems, pathname, setSidebarOpen }: {
   const searchParams = useSearchParams();
 
   return (
-    <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+    <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
       {visibleNavItems.map((item) => {
         const active = (() => {
           if (item.href.startsWith('/admin')) {
@@ -46,35 +46,45 @@ function SidebarNav({ visibleNavItems, pathname, setSidebarOpen }: {
 
         return (
           <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden focus:outline-none
-              ${active
-                ? 'text-white'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'}`}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative focus:outline-none`}
             style={active ? {
-              background: `linear-gradient(135deg, ${item.color}22, ${item.color}11)`,
-              border: `1px solid ${item.color}30`,
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              color: '#ffffff',
             } : {
               background: 'transparent',
               border: '1px solid transparent',
+              color: '#CBCBCB',
+            }}
+            onMouseEnter={e => {
+              if (!active) {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
+                (e.currentTarget as HTMLElement).style.color = '#ffffff';
+              }
+            }}
+            onMouseLeave={e => {
+              if (!active) {
+                (e.currentTarget as HTMLElement).style.background = 'transparent';
+                (e.currentTarget as HTMLElement).style.color = '#CBCBCB';
+              }
             }}>
 
-            {/* Active left border accent */}
+            {/* Active left accent */}
             {active && (
               <div className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full"
-                style={{ background: item.color }} />
+                style={{ background: '#ffffff' }} />
             )}
 
-            <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200
-              ${active ? 'scale-105' : 'group-hover:scale-105'}`}
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200`}
               style={active
-                ? { background: `${item.color}20`, border: `1px solid ${item.color}40` }
+                ? { background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }
                 : { background: 'rgba(255,255,255,0.05)', border: '1px solid transparent' }}>
-              <item.icon className="w-3.5 h-3.5" style={{ color: active ? item.color : undefined }} />
+              <item.icon className="w-3.5 h-3.5" style={{ color: active ? '#ffffff' : '#CBCBCB' }} />
             </div>
 
-            <span className={active ? 'font-semibold' : ''}>{item.label}</span>
+            <span style={{ color: active ? '#ffffff' : '#CBCBCB', fontWeight: active ? 500 : 400 }}>{item.label}</span>
 
-            {active && <ChevronRight className="w-3 h-3 ml-auto flex-shrink-0" style={{ color: item.color }} />}
+            {active && <ChevronRight className="w-3 h-3 ml-auto flex-shrink-0" style={{ color: '#ffffff' }} />}
           </Link>
         );
       })}
@@ -94,7 +104,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const visibleNavItems = isOfficerOrAdmin ? adminNavItems : citizenNavItems;
 
   useEffect(() => {
-    // /admin has its own credential gate, don't force redirect to login
     if (!loading && !user && pathname !== '/admin') router.push('/login');
   }, [user, loading, router, pathname]);
 
@@ -126,47 +135,40 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-base)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#FFFFE3' }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center animate-pulse-glow"
-            style={{ background: 'linear-gradient(135deg, #3b82f6, #f59e0b)' }}>
-            <Globe className="w-5 h-5 text-white" />
-          </div>
-          <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+          <span className="text-xl" style={{ fontFamily: 'DM Serif Display, Georgia, serif', color: '#4A4A4A' }}>
+            PassPorto
+          </span>
+          <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderTopColor: '#6D8196', borderColor: 'rgba(109,129,150,0.2)' }} />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--bg-base)', color: 'var(--text)' }}>
+    <div className="min-h-screen flex" style={{ background: '#FFFFE3', color: '#4A4A4A' }}>
 
       {/* ── Sidebar ────────────────────────────────────────────────────── */}
       {!shouldHideSidebar && (
-        <aside className={`fixed inset-y-0 left-0 z-50 w-60 flex flex-col transition-transform duration-300
-          md:translate-x-0 md:flex
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        <aside className={`fixed inset-y-0 left-0 z-50 w-60 flex flex-col transition-transform duration-300 md:translate-x-0 md:flex ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
           style={{
-            background: 'var(--bg-surface)',
-            borderRight: '1px solid var(--border)',
+            background: '#4A4A4A',
+            borderRight: '1px solid rgba(255,255,255,0.08)',
           }}>
 
           {/* Logo */}
-          <div className="flex items-center gap-3 px-5 py-5 border-b border-white/8 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center animate-pulse-glow"
-              style={{ background: 'linear-gradient(135deg, #3b82f6, #f59e0b)' }}>
-              <Globe className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-base font-bold" style={{ fontFamily: 'Space Grotesk, Inter, sans-serif' }}>
-              <span className="gradient-text-blue">Pass</span>
-              <span className="text-slate-100">Porto</span>
-              {isOfficerOrAdmin && (
-                <span className="ml-1 text-xs font-semibold px-1.5 py-0.5 rounded-md text-orange-300"
-                  style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.25)' }}>
-                  Admin
-                </span>
-              )}
+          <div className="flex items-center gap-2 px-5 py-5 flex-shrink-0"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+            <span className="text-base" style={{ fontFamily: 'DM Serif Display, Georgia, serif', color: '#ffffff' }}>
+              PassPorto
             </span>
+            {isOfficerOrAdmin && (
+              <span className="ml-1 text-xs font-semibold px-1.5 py-0.5 rounded"
+                style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#ffffff' }}>
+                Admin
+              </span>
+            )}
           </div>
 
           {/* Navigation */}
@@ -180,42 +182,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* User Panel */}
           {user && (
-            <div className="px-3 pb-4 border-t border-white/8 pt-3 flex-shrink-0">
+            <div className="px-3 pb-4 pt-3 flex-shrink-0"
+              style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               <Link href="/profile"
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all group mb-2">
+                className="flex items-center gap-3 p-3 rounded-xl transition-all group mb-2"
+                style={{ background: 'transparent' }}
+                onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.04)'}
+                onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
                 {/* Avatar */}
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 text-white"
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                   style={{
-                    background: user.role === 'admin'
-                      ? 'linear-gradient(135deg, #ea580c, #FCBB13)'
-                      : user.role === 'officer'
-                      ? 'linear-gradient(135deg, #097DE9, #FCBB13)'
-                      : 'linear-gradient(135deg, #3b82f6, #f59e0b)'
+                    background: '#ffffff',
+                    color: '#4A4A4A',
                   }}>
                   {user.role === 'admin' ? 'A' : user.role === 'officer' ? 'P' : (user.full_name || user.email)[0].toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-slate-200 truncate">
+                  <p className="text-xs font-semibold truncate" style={{ color: '#ffffff' }}>
                     {user.role === 'admin' ? 'Administrator' : user.role === 'officer' ? 'Petugas Imigrasi' : (user.full_name || user.email)}
                   </p>
-                  <p className="text-[10px] text-slate-500 truncate">
+                  <p className="text-[10px] truncate" style={{ color: '#CBCBCB' }}>
                     {user.email}
                   </p>
                   <div className="flex items-center gap-1 mt-0.5">
                     {user.role === 'admin' ? (
-                      <span className="flex items-center gap-1 text-[10px] text-orange-400 font-semibold">
+                      <span className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: '#8fa0b0' }}>
                         <Sparkles className="w-2.5 h-2.5" />Admin System
                       </span>
                     ) : user.role === 'officer' ? (
-                      <span className="flex items-center gap-1 text-[10px] text-blue-400 font-semibold">
+                      <span className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: '#8fa0b0' }}>
                         <Shield className="w-2.5 h-2.5" />Petugas Imigrasi
                       </span>
                     ) : user.is_verified ? (
-                      <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                      <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: '#82b58c' }}>
                         <Shield className="w-2.5 h-2.5" />NIK Verified
                       </span>
                     ) : (
-                      <span className="text-[10px] text-amber-400 flex items-center gap-1">
+                      <span className="text-[10px] flex items-center gap-1" style={{ color: '#d8a63b' }}>
                         <Shield className="w-2.5 h-2.5" />Belum Verified
                       </span>
                     )}
@@ -224,9 +227,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
 
               <button id="sidebar-logout-btn" onClick={handleLogout}
-                className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl text-xs text-slate-400 hover:text-red-400 hover:bg-red-500/8 transition-all cursor-pointer group">
+                className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer group"
+                style={{ color: '#CBCBCB', background: 'transparent', border: 'none' }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.06)';
+                  (e.currentTarget as HTMLButtonElement).style.color = '#ff8080';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                  (e.currentTarget as HTMLButtonElement).style.color = '#CBCBCB';
+                }}>
                 <LogOut className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Keluar</span>
+                <span>Keluar</span>
               </button>
             </div>
           )}
@@ -235,7 +247,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Mobile overlay */}
       {sidebarOpen && !shouldHideSidebar && (
-        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+        <div className="fixed inset-0 z-40 md:hidden"
+          style={{ background: 'rgba(74,74,74,0.4)', backdropFilter: 'blur(4px)' }}
           onClick={() => setSidebarOpen(false)} />
       )}
 
@@ -243,16 +256,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className={`flex-1 flex flex-col min-w-0 ${!shouldHideSidebar ? 'md:pl-60' : ''}`}>
         {/* Mobile topbar */}
         {!shouldHideSidebar && (
-          <header className="md:hidden flex items-center justify-between px-4 py-3.5 border-b border-white/8 flex-shrink-0"
-            style={{ background: 'var(--bg-surface)' }}>
+          <header className="md:hidden flex items-center justify-between px-4 py-3.5 flex-shrink-0"
+            style={{ background: '#ffffff', borderBottom: '1px solid rgba(74,74,74,0.08)' }}>
             <button id="mobile-menu-btn" onClick={() => setSidebarOpen(true)}
-              className="p-2 rounded-lg hover:bg-white/8 text-slate-300 transition-colors">
+              className="p-2 rounded-lg transition-colors"
+              style={{ color: '#4A4A4A' }}>
               <LayoutDashboard className="w-5 h-5" />
             </button>
-            <span className="font-bold text-sm" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              <span className="gradient-text-blue">Pass</span><span className="text-slate-100">Porto</span>
+            <span className="text-base" style={{ fontFamily: 'DM Serif Display, Georgia, serif', color: '#4A4A4A' }}>
+              PassPorto
             </span>
-            <button onClick={() => refreshUser()} className="p-2 rounded-lg hover:bg-white/8 text-slate-400 transition-colors">
+            <button onClick={() => refreshUser()} className="p-2 rounded-lg transition-colors" style={{ color: '#aaaaaa' }}>
               <RefreshCw className="w-4 h-4" />
             </button>
           </header>

@@ -38,10 +38,10 @@ export function ToastContainer({ toasts, remove }: ToastProps) {
               <Icon className="w-4 h-4" style={{ color }} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-slate-100">{t.title}</p>
-              {t.body && <p className="text-xs text-slate-400 font-medium mt-0.5 leading-relaxed">{t.body}</p>}
+              <p className="text-sm font-bold text-[#4A4A4A]">{t.title}</p>
+              {t.body && <p className="text-xs text-[#777777] font-medium mt-0.5 leading-relaxed">{t.body}</p>}
             </div>
-            <button onClick={() => remove(t.id)} className="text-slate-500 hover:text-slate-300 flex-shrink-0 cursor-pointer transition-colors">
+            <button onClick={() => remove(t.id)} className="text-slate-400 hover:text-[#4A4A4A] flex-shrink-0 cursor-pointer transition-colors">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -77,7 +77,7 @@ export function usePushNotificationSimulator(
     if (!applicationStatus) return;
 
     const messages: Record<string, { title: string; body: string }> = {
-      Verified: { title: 'Pembayaran Dikonfirmasi ✅', body: 'Permohonan paspor Anda sedang diproses.' },
+      Verified: { title: 'Pembayaran Dikonfirmasi', body: 'Permohonan paspor Anda sedang diproses.' },
       Printing: { title: 'Paspor Sedang Dicetak 🖨️', body: 'Paspor Anda sedang dalam tahap percetakan.' },
       Ready:    { title: 'Paspor Siap Diambil 🎉',   body: 'Kunjungi kantor imigrasi untuk mengambil paspor Anda.' },
     };

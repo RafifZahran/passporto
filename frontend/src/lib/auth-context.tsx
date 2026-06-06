@@ -9,7 +9,7 @@ interface AuthContextValue {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, redirectTo?: string | null) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -45,14 +45,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, redirectTo: string | null = '/dashboard') => {
     const res = await authApi.login(email, password);
     const { token: t, user: u } = res.data;
     setToken(t);
     setUser(u);
     localStorage.setItem('passporto_token', t);
     localStorage.setItem('passporto_user', JSON.stringify(u));
-    router.push('/dashboard');
+    if (redirectTo) {
+      router.push(redirectTo);
+    }
   };
 
   const register = async (email: string, password: string) => {

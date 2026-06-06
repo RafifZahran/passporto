@@ -394,13 +394,13 @@ export default function OCRUpload({ onExtracted }: OCRUploadProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-1">
-        <ScanLine className="w-4 h-4 text-blue-400" />
-        <span className="text-sm font-semibold text-slate-300">Upload KTP untuk Auto-Fill</span>
-        <span className="px-2 py-0.5 text-xs rounded-full font-medium" style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.3)' }}>
+        <ScanLine className="w-4 h-4 text-blue-500" />
+        <span className="text-sm font-bold text-[#292966]">Upload KTP untuk Auto-Fill</span>
+        <span className="px-2 py-0.5 text-xs rounded-full font-medium" style={{ background: 'rgba(59,130,246,0.15)', color: '#2563eb', border: '1px solid rgba(59,130,246,0.3)' }}>
           OCR
         </span>
       </div>
-      <p className="text-xs text-slate-300">Upload foto KTP Anda dan data akan terisi otomatis menggunakan teknologi OCR.</p>
+      <p className="text-xs text-[#777777] font-medium">Upload foto KTP Anda dan data akan terisi otomatis menggunakan teknologi OCR.</p>
 
       {/* Drop zone */}
       {!file ? (
@@ -411,8 +411,8 @@ export default function OCRUpload({ onExtracted }: OCRUploadProps) {
           onClick={() => inputRef.current?.click()}
           className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200
             ${dragOver
-              ? 'border-blue-400 bg-blue-400/10'
-              : 'border-white/10 hover:border-blue-400/50 hover:bg-white/3'}`}>
+              ? 'border-blue-400 bg-blue-50/5'
+              : 'border-[rgba(74,74,74,0.15)] hover:border-blue-400/50 hover:bg-[rgba(59,130,246,0.02)]'}`}>
           <input
             id="ocr-file-input"
             ref={inputRef} type="file"
@@ -423,11 +423,11 @@ export default function OCRUpload({ onExtracted }: OCRUploadProps) {
             style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)' }}>
             <Upload className="w-7 h-7 text-blue-400" />
           </div>
-          <p className="font-medium text-sm mb-1">Seret & lepas foto KTP di sini</p>
-          <p className="text-slate-400 text-xs">atau klik untuk pilih file · JPG, PNG, HEIC</p>
+          <p className="font-semibold text-sm mb-1 text-[#4A4A4A]">Seret & lepas foto KTP di sini</p>
+          <p className="text-[#777777] text-xs font-semibold">atau klik untuk pilih file · JPG, PNG, HEIC</p>
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden border border-white/10">
+        <div className="rounded-2xl overflow-hidden border border-[rgba(74,74,74,0.12)]">
           {/* Preview */}
           <div className="relative bg-slate-900">
             {preview && (
@@ -454,10 +454,10 @@ export default function OCRUpload({ onExtracted }: OCRUploadProps) {
 
           {/* File info & actions */}
           <div className="p-4 flex items-center gap-3">
-            <ImageIcon className="w-4 h-4 text-slate-400 flex-shrink-0" />
+            <ImageIcon className="w-4 h-4 text-[#777777] flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{file.name}</p>
-              <p className="text-xs text-slate-400">{(file.size / 1024).toFixed(0)} KB</p>
+              <p className="text-sm font-bold text-[#4A4A4A] truncate">{file.name}</p>
+              <p className="text-xs text-[#777777] font-semibold">{(file.size / 1024).toFixed(0)} KB</p>
             </div>
             {status !== 'done' && (
               <button id="ocr-scan-btn" onClick={handleScan} disabled={status === 'scanning'}
@@ -476,10 +476,10 @@ export default function OCRUpload({ onExtracted }: OCRUploadProps) {
       {/* Results */}
       {status === 'done' && extracted && (
         <div className="rounded-2xl p-5 animate-fade-in space-y-3"
-          style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
+          style={{ background: 'rgba(81,151,85,0.08)', border: '1px solid rgba(81,151,85,0.2)' }}>
           <div className="flex items-center gap-2 mb-3">
-            <CheckCircle className="w-5 h-5 text-emerald-400" />
-            <span className="text-sm font-semibold text-emerald-400">Data berhasil diekstrak dari KTP!</span>
+            <CheckCircle className="w-5 h-5 text-[#519755]" />
+            <span className="text-sm font-bold text-[#519755]">Data berhasil diekstrak dari KTP!</span>
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
             {[
@@ -489,24 +489,24 @@ export default function OCRUpload({ onExtracted }: OCRUploadProps) {
               { label: 'Jenis Kelamin', value: extracted.gender },
             ].map((f) => f.value && (
               <div key={f.label}>
-                <p className="text-xs text-slate-400 mb-0.5">{f.label}</p>
-                <p className="font-medium text-emerald-300 truncate">{f.value}</p>
+                <p className="text-xs text-[#777777] mb-0.5 font-bold uppercase tracking-wide">{f.label}</p>
+                <p className="font-bold text-[#4A4A4A] truncate">{f.value}</p>
               </div>
             ))}
             {extracted.address && (
               <div className="col-span-2">
-                <p className="text-xs text-slate-400 mb-0.5">Alamat</p>
-                <p className="font-medium text-emerald-300">{extracted.address}</p>
+                <p className="text-xs text-[#777777] mb-0.5 font-bold uppercase tracking-wide">Alamat</p>
+                <p className="font-bold text-[#4A4A4A] leading-relaxed">{extracted.address}</p>
               </div>
             )}
           </div>
-          <p className="text-xs text-slate-300 pt-1">Data telah diisi otomatis ke formulir di bawah. Anda dapat mengubahnya sebelum submit.</p>
+          <p className="text-xs text-[#777777] pt-1 font-medium">Data telah diisi otomatis ke formulir di bawah. Anda dapat mengubahnya sebelum submit.</p>
         </div>
       )}
 
       {status === 'error' && (
         <div className="flex items-center gap-3 p-4 rounded-xl text-sm"
-          style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}>
+          style={{ background: 'rgba(227,83,54,0.08)', border: '1px solid rgba(227,83,54,0.2)', color: '#E35336' }}>
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {errorMsg || 'Gagal membaca KTP. Pastikan foto jelas dan tidak buram, lalu coba lagi.'}
         </div>
