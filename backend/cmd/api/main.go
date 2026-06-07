@@ -91,10 +91,25 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
+	// Check if SSL certificate and key exist for HTTPS
+	hasSSL := false
+	if _, errCert := os.Stat("cert.pem"); errCert == nil {
+		if _, errKey := os.Stat("key.pem"); errKey == nil {
+			hasSSL = true
+		}
+	}
+
 	go func() {
-		log.Printf("[startup] 🚀 PassPorto API listening on http://localhost:%s", cfg.Port)
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("[server] fatal: %v", err)
+		if hasSSL {
+			log.Printf("[startup] 🚀 PassPorto API listening on https://localhost:%s (HTTPS enabled)", cfg.Port)
+			if err := srv.ListenAndServeTLS("cert.pem", "key.pem"); err != nil && err != http.ErrServerClosed {
+				log.Fatalf("[server] fatal: %v", err)
+			}
+		} else {
+			log.Printf("[startup] 🚀 PassPorto API listening on http://localhost:%s", cfg.Port)
+			if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				log.Fatalf("[server] fatal: %v", err)
+			}
 		}
 	}()
 
